@@ -1,0 +1,10 @@
+{
+  "name": "calver",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Ankeet Maini <ankeet.maini@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@actions/core": "^1.6.0"
+  }
+}

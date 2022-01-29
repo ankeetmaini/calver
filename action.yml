@@ -1,0 +1,12 @@
+name: "Calver version"
+description: "Bumps calver"
+inputs:
+  path:
+    description: "file to be updated"
+    required: true
+  platform:
+    description: "android or web"
+    required: true
+runs:
+  using: "node16"
+  main: "index.js"
