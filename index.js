@@ -1,5 +1,6 @@
 const core = require("@actions/core");
 const fs = require("fs");
+const child_process = require("child_process");
 
 const versionCodeRegex = new RegExp(/versionCode\s*=\s*(\d*)/);
 const versionNameRegex = new RegExp(/versionName\s*=\s*"([0-9|.|a-z]*)"/);
@@ -75,9 +76,13 @@ async function run() {
     } else {
       core.setFailed("Only `android` and `web` supported right now.");
     }
+    child_process.execSync(`git config --global user.name "Github Actions"`);
+    child_process.execSync(
+      `git config --global user.email "actions@users.noreply.github.com"`
+    );
+    child_process.execSync(`git add ${filePath}`);
+    child_process.execSync(`git commit -m 'Bump version'`);
   } catch (error) {
-    console.log(error.message);
-    console.log("-=======");
     core.setFailed(error.message);
   }
 }

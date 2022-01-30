@@ -6,6 +6,7 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 
 const core = __nccwpck_require__(186);
 const fs = __nccwpck_require__(747);
+const child_process = __nccwpck_require__(129);
 
 const versionCodeRegex = new RegExp(/versionCode\s*=\s*(\d*)/);
 const versionNameRegex = new RegExp(/versionName\s*=\s*"([0-9|.|a-z]*)"/);
@@ -81,9 +82,13 @@ async function run() {
     } else {
       core.setFailed("Only `android` and `web` supported right now.");
     }
+    child_process.execSync(`git config --global user.name "Github Actions"`);
+    child_process.execSync(
+      `git config --global user.email "actions@users.noreply.github.com"`
+    );
+    child_process.execSync(`git add ${filePath}`);
+    child_process.execSync(`git commit -m 'Bump version'`);
   } catch (error) {
-    console.log(error.message);
-    console.log("-=======");
     core.setFailed(error.message);
   }
 }
@@ -1654,6 +1659,14 @@ exports.debug = debug; // for test
 
 "use strict";
 module.exports = require("assert");
+
+/***/ }),
+
+/***/ 129:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("child_process");
 
 /***/ }),
 
