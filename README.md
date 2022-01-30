@@ -46,4 +46,4 @@ jobs:
           commit_author: Calver Bot <calver@noreply.com>
 ```
 
-> Use either web or android if you've both the codebases in one repository.
+> Use either web or android unless you've both the codebases in one repository.
