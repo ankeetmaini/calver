@@ -55,14 +55,14 @@ try {
             return changed;
         });
         fs.writeFileSync(filePath, fileContents);
-
+        console.log({fileContents})
     } else if (platform === 'web') {
 
         const packageJson = JSON.parse(fileContents);
         const fullVersion = isCalver(packageJson.version);
         fileContents.replace(packageVersion, (main, old) => main.replace(old, fullVersion));
         fs.writeFileSync(filePath, fileContents);
-
+        console.log({fileContents})
     } else {
         core.setFailed('Only `android` and `web` supported right now.');
     }
