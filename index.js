@@ -82,6 +82,7 @@ async function run() {
     );
     child_process.execSync(`git add ${filePath}`);
     child_process.execSync(`git commit -m 'Bump version'`);
+    child_process.execSync(`git push`);
   } catch (error) {
     core.setFailed(error.message);
   }
