@@ -4,7 +4,11 @@
   "main": "index.js",
   "author": "Ankeet Maini <ankeet.maini@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "build": "ncc build index.js --license licenses.txt"
+  },
   "dependencies": {
-    "@actions/core": "^1.6.0"
+    "@actions/core": "^1.6.0",
+    "@vercel/ncc": "^0.33.1"
   }
 }
