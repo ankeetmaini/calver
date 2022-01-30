@@ -34,7 +34,8 @@ const isCalver = (version) => {
   return fullVersion;
 };
 
-const calver = () => {
+// most @actions toolkit packages have async methods
+async function run() {
   try {
     const filePath = core.getInput("path");
     const platform = core.getInput("platform");
@@ -44,9 +45,10 @@ const calver = () => {
     const fileContents = fs.readFileSync(filePath).toString();
 
     if (platform === "android") {
+      // eslint-disable-next-line no-unused-vars
       const [_, versionCode] = versionCodeRegex.exec(fileContents);
       const newVersion = Number(versionCode) + 1;
-
+      // eslint-disable-next-line no-unused-vars
       const [__, versionName] = versionNameRegex.exec(fileContents);
 
       const fullVersion = isCalver(versionName);
@@ -74,11 +76,12 @@ const calver = () => {
       core.setFailed("Only `android` and `web` supported right now.");
     }
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
+    console.log("-=======");
     core.setFailed(error.message);
   }
-};
+}
 
-calver();
+run();
 
-module.exports = calver;
+module.exports = run;

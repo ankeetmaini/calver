@@ -1,14 +1,17 @@
-const core = require("@actions/core");
+const process = require("process");
+const cp = require("child_process");
+const path = require("path");
 const fs = require("fs");
 
-const calver = require("../index");
-
-jest.mock("@actions/core");
-jest.mock("fs");
+const core = require("@actions/core");
+const calver = require("./index");
 
 jest.useFakeTimers();
-jest.setSystemTime(1643530268736); // Jan 30, 2022​
+jest.setSystemTime(1643530268736);
+jest.mock("fs");
+jest.mock("@actions/core");
 
+// shows how the runner will run a javascript action with env / stdout protocol
 test("updates package json from non calver to calver", () => {
   core.getInput.mockReturnValueOnce("abc");
   core.getInput.mockReturnValueOnce("web");
@@ -33,7 +36,9 @@ test("updates package json from non calver to calver", () => {
 }
 `
   );
+
   calver();
+
   expect(fs.writeFileSync).toHaveBeenCalledWith(
     "abc",
     `
@@ -61,6 +66,7 @@ test("updates package json from non calver to calver", () => {
 test("updates package json calver", () => {
   core.getInput.mockReturnValueOnce("abc");
   core.getInput.mockReturnValueOnce("web");
+
   fs.readFileSync.mockReturnValueOnce(
     `
   {
@@ -82,6 +88,7 @@ test("updates package json calver", () => {
   }
   `
   );
+
   calver();
   expect(fs.writeFileSync).toHaveBeenCalledWith(
     "abc",
@@ -110,6 +117,7 @@ test("updates package json calver", () => {
 test("updates package json calver - same day large number of deploys", () => {
   core.getInput.mockReturnValueOnce("abc");
   core.getInput.mockReturnValueOnce("web");
+
   fs.readFileSync.mockReturnValueOnce(
     `
     {
@@ -131,6 +139,7 @@ test("updates package json calver - same day large number of deploys", () => {
     }
     `
   );
+
   calver();
   expect(fs.writeFileSync).toHaveBeenCalledWith(
     "abc",
@@ -159,6 +168,7 @@ test("updates package json calver - same day large number of deploys", () => {
 test("updates package json calver different dates", () => {
   core.getInput.mockReturnValueOnce("abc");
   core.getInput.mockReturnValueOnce("web");
+
   fs.readFileSync.mockReturnValueOnce(
     `
     {
@@ -180,6 +190,7 @@ test("updates package json calver different dates", () => {
     }
     `
   );
+
   calver();
   expect(fs.writeFileSync).toHaveBeenCalledWith(
     "abc",
@@ -208,6 +219,7 @@ test("updates package json calver different dates", () => {
 test("updates gradle file", () => {
   core.getInput.mockReturnValueOnce("abc");
   core.getInput.mockReturnValueOnce("android");
+
   fs.readFileSync.mockReturnValueOnce(
     `
     import org.jetbrains.kotlin.config.KotlinCompilerVersion
@@ -247,6 +259,7 @@ test("updates gradle file", () => {
     }
       `
   );
+
   calver();
   expect(fs.writeFileSync).toHaveBeenCalledWith(
     "abc",
@@ -332,6 +345,7 @@ test("updates gradle file same date", () => {
       }
         `
   );
+
   calver();
   expect(fs.writeFileSync).toHaveBeenCalledWith(
     "abc",

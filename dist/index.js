@@ -1,96 +1,5 @@
-/******/ (() => { // webpackBootstrap
+require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
-
-/***/ 932:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
-
-const core = __nccwpck_require__(186);
-const fs = __nccwpck_require__(147);
-
-const versionCodeRegex = new RegExp(/versionCode\s*=\s*(\d*)/);
-const versionNameRegex = new RegExp(/versionName\s*=\s*"([0-9|.|a-z]*)"/);
-const calverRegex = new RegExp(/\d{2}.\d{2}.\d{2}.((\d).*)(-[a-z].*)?/);
-const packageVersion = new RegExp(/"version"\s*:\s*"([^\s]*)"/);
-
-const pad = (n) => {
-  n = n + "";
-  if (n.length === 2) return n;
-  if (n.length === 1) return "0" + n;
-};
-
-const isCalver = (version) => {
-  const date = new Date();
-  const newVersion = `${date.getFullYear() % 100}.${pad(
-    date.getMonth() + 1
-  )}.${pad(date.getDate())}`;
-
-  let fullVersion;
-
-  const result = calverRegex.exec(version);
-  if (!result) return newVersion + ".0";
-
-  const prev = result[0];
-
-  if (prev.slice(0, 8) === newVersion) {
-    fullVersion = `${newVersion}.${Number(result[1]) + 1}`;
-  } else {
-    fullVersion = `${newVersion}.0`;
-  }
-
-  return fullVersion;
-};
-
-const calver = () => {
-  try {
-    const filePath = core.getInput("path");
-    const platform = core.getInput("platform");
-
-    if (!filePath && !platform) return;
-
-    const fileContents = fs.readFileSync(filePath).toString();
-
-    if (platform === "android") {
-      const [_, versionCode] = versionCodeRegex.exec(fileContents);
-      const newVersion = Number(versionCode) + 1;
-
-      const [__, versionName] = versionNameRegex.exec(fileContents);
-
-      const fullVersion = isCalver(versionName);
-
-      const versionUpdated = fileContents.replace(
-        versionCodeRegex,
-        (main, old) => main.replace(old, newVersion)
-      );
-
-      const versionNameUpdated = versionUpdated.replace(
-        versionNameRegex,
-        (main, old) => main.replace(old, fullVersion)
-      );
-      fs.writeFileSync(filePath, versionNameUpdated);
-    } else if (platform === "web") {
-      const packageJson = JSON.parse(fileContents);
-      const fullVersion = isCalver(packageJson.version);
-
-      const newContent = fileContents.replace(packageVersion, (main, old) =>
-        main.replace(old, fullVersion)
-      );
-
-      fs.writeFileSync(filePath, newContent);
-    } else {
-      core.setFailed("Only `android` and `web` supported right now.");
-    }
-  } catch (error) {
-    console.log(error);
-    core.setFailed(error.message);
-  }
-};
-
-calver();
-
-module.exports = calver;
-
-
-/***/ }),
 
 /***/ 351:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
@@ -118,7 +27,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.issue = exports.issueCommand = void 0;
-const os = __importStar(__nccwpck_require__(37));
+const os = __importStar(__nccwpck_require__(87));
 const utils_1 = __nccwpck_require__(278);
 /**
  * Commands
@@ -229,8 +138,8 @@ exports.getIDToken = exports.getState = exports.saveState = exports.group = expo
 const command_1 = __nccwpck_require__(351);
 const file_command_1 = __nccwpck_require__(717);
 const utils_1 = __nccwpck_require__(278);
-const os = __importStar(__nccwpck_require__(37));
-const path = __importStar(__nccwpck_require__(17));
+const os = __importStar(__nccwpck_require__(87));
+const path = __importStar(__nccwpck_require__(622));
 const oidc_utils_1 = __nccwpck_require__(41);
 /**
  * The code to exit an action
@@ -539,8 +448,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.issueCommand = void 0;
 // We use any as a valid input type
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const fs = __importStar(__nccwpck_require__(147));
-const os = __importStar(__nccwpck_require__(37));
+const fs = __importStar(__nccwpck_require__(747));
+const os = __importStar(__nccwpck_require__(87));
 const utils_1 = __nccwpck_require__(278);
 function issueCommand(command, message) {
     const filePath = process.env[`GITHUB_${command}`];
@@ -762,8 +671,8 @@ exports.PersonalAccessTokenCredentialHandler = PersonalAccessTokenCredentialHand
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const http = __nccwpck_require__(685);
-const https = __nccwpck_require__(687);
+const http = __nccwpck_require__(605);
+const https = __nccwpck_require__(211);
 const pm = __nccwpck_require__(443);
 let tunnel;
 var HttpCodes;
@@ -1380,13 +1289,13 @@ module.exports = __nccwpck_require__(219);
 "use strict";
 
 
-var net = __nccwpck_require__(808);
-var tls = __nccwpck_require__(404);
-var http = __nccwpck_require__(685);
-var https = __nccwpck_require__(687);
-var events = __nccwpck_require__(361);
-var assert = __nccwpck_require__(491);
-var util = __nccwpck_require__(837);
+var net = __nccwpck_require__(631);
+var tls = __nccwpck_require__(16);
+var http = __nccwpck_require__(605);
+var https = __nccwpck_require__(211);
+var events = __nccwpck_require__(614);
+var assert = __nccwpck_require__(357);
+var util = __nccwpck_require__(669);
 
 
 exports.httpOverHttp = httpOverHttp;
@@ -1646,7 +1555,7 @@ exports.debug = debug; // for test
 
 /***/ }),
 
-/***/ 491:
+/***/ 357:
 /***/ ((module) => {
 
 "use strict";
@@ -1654,7 +1563,7 @@ module.exports = require("assert");
 
 /***/ }),
 
-/***/ 361:
+/***/ 614:
 /***/ ((module) => {
 
 "use strict";
@@ -1662,7 +1571,7 @@ module.exports = require("events");
 
 /***/ }),
 
-/***/ 147:
+/***/ 747:
 /***/ ((module) => {
 
 "use strict";
@@ -1670,7 +1579,7 @@ module.exports = require("fs");
 
 /***/ }),
 
-/***/ 685:
+/***/ 605:
 /***/ ((module) => {
 
 "use strict";
@@ -1678,7 +1587,7 @@ module.exports = require("http");
 
 /***/ }),
 
-/***/ 687:
+/***/ 211:
 /***/ ((module) => {
 
 "use strict";
@@ -1686,7 +1595,7 @@ module.exports = require("https");
 
 /***/ }),
 
-/***/ 808:
+/***/ 631:
 /***/ ((module) => {
 
 "use strict";
@@ -1694,7 +1603,7 @@ module.exports = require("net");
 
 /***/ }),
 
-/***/ 37:
+/***/ 87:
 /***/ ((module) => {
 
 "use strict";
@@ -1702,7 +1611,7 @@ module.exports = require("os");
 
 /***/ }),
 
-/***/ 17:
+/***/ 622:
 /***/ ((module) => {
 
 "use strict";
@@ -1710,7 +1619,7 @@ module.exports = require("path");
 
 /***/ }),
 
-/***/ 404:
+/***/ 16:
 /***/ ((module) => {
 
 "use strict";
@@ -1718,7 +1627,7 @@ module.exports = require("tls");
 
 /***/ }),
 
-/***/ 837:
+/***/ 669:
 /***/ ((module) => {
 
 "use strict";
@@ -1764,12 +1673,98 @@ module.exports = require("util");
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
 /******/ 	
 /************************************************************************/
-/******/ 	
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __nccwpck_require__(932);
-/******/ 	module.exports = __webpack_exports__;
-/******/ 	
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+(() => {
+const core = __nccwpck_require__(186);
+
+const fs = __nccwpck_require__(747);
+
+const versionCodeRegex = new RegExp(/versionCode\s*=\s*(\d*)/);
+const versionNameRegex = new RegExp(/versionName\s*=\s*"([0-9|.|a-z]*)"/);
+const calverRegex = new RegExp(/\d{2}.\d{2}.\d{2}.((\d).*)(-[a-z].*)?/);
+const packageVersion = new RegExp(/"version"\s*:\s*"([^\s]*)"/);
+
+const pad = (n) => {
+  n = n + "";
+  if (n.length === 2) return n;
+  if (n.length === 1) return "0" + n;
+};
+
+const isCalver = (version) => {
+  const date = new Date();
+  const newVersion = `${date.getFullYear() % 100}.${pad(
+    date.getMonth() + 1
+  )}.${pad(date.getDate())}`;
+
+  let fullVersion;
+
+  const result = calverRegex.exec(version);
+  if (!result) return newVersion + ".0";
+
+  const prev = result[0];
+
+  if (prev.slice(0, 8) === newVersion) {
+    fullVersion = `${newVersion}.${Number(result[1]) + 1}`;
+  } else {
+    fullVersion = `${newVersion}.0`;
+  }
+
+  return fullVersion;
+};
+
+// most @actions toolkit packages have async methods
+async function run() {
+  try {
+    const filePath = core.getInput("path");
+    const platform = core.getInput("platform");
+
+    if (!filePath && !platform) return;
+
+    const fileContents = fs.readFileSync(filePath).toString();
+
+    if (platform === "android") {
+      // eslint-disable-next-line no-unused-vars
+      const [_, versionCode] = versionCodeRegex.exec(fileContents);
+      const newVersion = Number(versionCode) + 1;
+      // eslint-disable-next-line no-unused-vars
+      const [__, versionName] = versionNameRegex.exec(fileContents);
+
+      const fullVersion = isCalver(versionName);
+
+      const versionUpdated = fileContents.replace(
+        versionCodeRegex,
+        (main, old) => main.replace(old, newVersion)
+      );
+
+      const versionNameUpdated = versionUpdated.replace(
+        versionNameRegex,
+        (main, old) => main.replace(old, fullVersion)
+      );
+      fs.writeFileSync(filePath, versionNameUpdated);
+    } else if (platform === "web") {
+      const packageJson = JSON.parse(fileContents);
+      const fullVersion = isCalver(packageJson.version);
+
+      const newContent = fileContents.replace(packageVersion, (main, old) =>
+        main.replace(old, fullVersion)
+      );
+
+      fs.writeFileSync(filePath, newContent);
+    } else {
+      core.setFailed("Only `android` and `web` supported right now.");
+    }
+  } catch (error) {
+    console.log(error);
+    core.setFailed(error.message);
+  }
+}
+
+run();
+
+})();
+
+module.exports = __webpack_exports__;
 /******/ })()
 ;
+//# sourceMappingURL=index.js.map
