@@ -5,10 +5,19 @@
   "author": "Ankeet Maini <ankeet.maini@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "ncc build index.js --license licenses.txt"
+    "build": "ncc build index.js --license licenses.txt",
+    "test": "jest"
   },
   "dependencies": {
     "@actions/core": "^1.6.0",
     "@vercel/ncc": "^0.33.1"
+  },
+  "devDependencies": {
+    "jest": "^27.4.7"
+  },
+  "jest": {
+    "clearMocks": true,
+    "resetMocks": true,
+    "resetModules": true
   }
 }
