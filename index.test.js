@@ -1,6 +1,3 @@
-const process = require("process");
-const cp = require("child_process");
-const path = require("path");
 const fs = require("fs");
 
 const core = require("@actions/core");
