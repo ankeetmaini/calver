@@ -1,11 +1,11 @@
 {
   "name": "calver",
   "version": "1.0.0",
-  "main": "dist/index.js",
+  "main": "dist/index.cjs",
   "author": "Ankeet Maini <ankeet.maini@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "ncc build index.js --license licenses.txt",
+    "build": "ncc build index.cjs --license licenses.txt",
     "test": "jest"
   },
   "dependencies": {
