@@ -3,7 +3,7 @@ const fs = require('fs');
 
 const versionCodeRegex = new RegExp(/versionCode\s*=\s*(\d*)/);
 const versionNameRegex = new RegExp(/versionName\s*=\s*"[0-9|.|a-z]*"/);
-const calverRegex = new RegExp(/(\d){2}.(\d){2}.(\d){2}.((\d){1})(-[a-z].*)?/);
+const calverRegex = new RegExp(/\d{2}.\d{2}.\d{2}.((\d){1})(-[a-z].*)?/);
 const packageVersion = new RegExp(/"version"\s*:\s*"[^\s]*"/);
 
 const pad = n => {
@@ -44,7 +44,7 @@ try {
         const [__, versionName] = versionNameRegex.exec(fileContents);
         
         const fullVersion = isCalver(versionName);
-
+        console.log({fullVersion});
         fileContents.replace(versionCodeRegex, (main, old) => {
             const changed = main.replace(old, newVersion);
             return changed;
@@ -60,6 +60,7 @@ try {
 
         const packageJson = JSON.parse(fileContents);
         const fullVersion = isCalver(packageJson.version);
+        console.log({fullVersion});
         fileContents.replace(packageVersion, (main, old) => main.replace(old, fullVersion));
         fs.writeFileSync(filePath, fileContents);
         console.log({fileContents})
