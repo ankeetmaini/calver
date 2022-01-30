@@ -2,7 +2,7 @@ const core = require('@actions/core');
 const fs = require('fs');
 
 const versionCodeRegex = new RegExp(/versionCode\s*=\s*(\d*)/);
-const versionNameRegex = new RegExp(/versionName\s*=\s*"[0-9|.|a-z]*"/);
+const versionNameRegex = new RegExp(/versionName\s*=\s*"([0-9|.|a-z]*)"/);
 const calverRegex = new RegExp(/\d{2}.\d{2}.\d{2}.((\d){1})(-[a-z].*)?/);
 const packageVersion = new RegExp(/"version"\s*:\s*"[^\s]*"/);
 
@@ -46,6 +46,7 @@ try {
         const fullVersion = isCalver(versionName);
         console.log({fullVersion});
         fileContents.replace(versionCodeRegex, (main, old) => {
+            console.log(main, old);
             const changed = main.replace(old, newVersion);
             return changed;
         });
