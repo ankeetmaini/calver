@@ -1,12 +1,15 @@
 const fs = require("fs");
 
+jest.mock("fs");
+jest.mock("@actions/core");
+jest.mock("@actions/exec", () => {});
+jest.useFakeTimers();
+jest.setSystemTime(1643530268736);
+
 const core = require("@actions/core");
 const calver = require("./index");
 
-jest.useFakeTimers();
-jest.setSystemTime(1643530268736);
-jest.mock("fs");
-jest.mock("@actions/core");
+
 
 // shows how the runner will run a javascript action with env / stdout protocol
 test("updates package json from non calver to calver", () => {
