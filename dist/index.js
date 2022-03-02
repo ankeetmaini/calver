@@ -24,21 +24,6 @@ const pad = (n) => {
   if (n.length === 1) return "0" + n;
 };
 
-async function execCommand(command, options = {}) {
-  const projectPath = "/Users/anuragsinha/Documents/tools/mono-ios/hotstarx-ios-mobile"
-  options.cwd = projectPath
-  return exec.exec(command, [], options)
-}
-
-// function setValues(id, key) {
-//   for (var i = 0; i < jsonObj.length; i++) {
-//     if (jsonObj[i].Id === id) {
-//       jsonObj[i].keys = key;
-//       return;
-//     }
-//   }
-// }
-
 
 const isCalver = (version) => {
   const date = new Date();
@@ -65,10 +50,8 @@ const isCalver = (version) => {
 // most @actions toolkit packages have async methods
 async function run() {
   try {
-    //const filePath = core.getInput("path");
-    const filePath = "/Users/anuragsinha/Documents/tools/mono-ios/hotstarx-ios-mobile/hotstarx-ios-mobile/Application/Info.plist"
-    const platform = "ios"
-
+    const filePath = core.getInput("path");
+    const platform = core.getInput("platform");
     if (!filePath && !platform) return;
 
     const fileContents = fs.readFileSync(filePath).toString();
