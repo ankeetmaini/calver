@@ -80,32 +80,20 @@ async function run() {
 
       fs.writeFileSync(filePath, newContent);
     } else if (platform === "ios") {
-      const buildVersion = `xcrun agvtool what-version`
-      console.log(buildVersion)
-        await execCommand(buildVersion).catch(error => {
+        await execCommand('xcrun agvtool what-version').catch(error => {
             core.setFailed(error.message)
         })
-      const marketingVersion = `agvtool what-marketing-version -terse1`
-      console.log(marketingVersion)
-        await execCommand(marketingVersion).catch(error => {
+      const currentVersion =  await execCommand('agvtool what-marketing-version -terse1').catch(error => {
             core.setFailed(error.message)
         })
-      const fullVersion = isCalver(marketingVersion);
-      console.log(fullVersion)
-      var parsedVersion = fullVersion;
-      const [major,minor,patch]  = parsedVersion.split('.');
-      console.log(major);
-      console.log(minor);
-      console.log(patch);
+      const fullVersion = isCalver(currentVersion);
+      const [major,minor,patch]  = fullVersion.split('.');
       var combinedVersion = major + '.' + minor + '.' + patch;
-      console.log(combinedVersion);
       const updatedVersion = `agvtool next-version -all`
       await execCommand(updatedVersion).catch(error => {
         core.setFailed(error.message)
     })
-      console.log(updatedVersion)
       const newMarketingVersion = `xcrun agvtool new-marketing-version ${combinedVersion}`
-      console.log(newMarketingVersion); 
       await execCommand(newMarketingVersion).catch(error => {
         core.setFailed(error.message)
       })
