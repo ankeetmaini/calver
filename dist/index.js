@@ -6,9 +6,15 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 
 const core = __nccwpck_require__(186);
 const fs = __nccwpck_require__(747);
+const exec = __nccwpck_require__(526);
+var plist = __nccwpck_require__(663);
+
+
 
 const versionCodeRegex = new RegExp(/versionCode\s*=\s*(\d*)/);
 const versionNameRegex = new RegExp(/versionName\s*=\s*"([0-9|.|a-z]*)"/);
+const versionCodeiOSRegex = (/* unused pure expression or super */ null && (new RegExp(/CFBundleVersion\s*=\s*(\d*)/)));
+const versionNameiOSRegex = (/* unused pure expression or super */ null && (new RegExp(/CFBundleShortVersionString\s*=\s*"([0-9|.|a-z]*)"/)));
 const calverRegex = new RegExp(/\d{2}.\d{2}.\d{2}.((\d).*)(-[a-z].*)?/);
 const packageVersion = new RegExp(/"version"\s*:\s*"([^\s]*)"/);
 
@@ -17,6 +23,22 @@ const pad = (n) => {
   if (n.length === 2) return n;
   if (n.length === 1) return "0" + n;
 };
+
+async function execCommand(command, options = {}) {
+  const projectPath = "/Users/anuragsinha/Documents/tools/mono-ios/hotstarx-ios-mobile"
+  options.cwd = projectPath
+  return exec.exec(command, [], options)
+}
+
+// function setValues(id, key) {
+//   for (var i = 0; i < jsonObj.length; i++) {
+//     if (jsonObj[i].Id === id) {
+//       jsonObj[i].keys = key;
+//       return;
+//     }
+//   }
+// }
+
 
 const isCalver = (version) => {
   const date = new Date();
@@ -43,8 +65,9 @@ const isCalver = (version) => {
 // most @actions toolkit packages have async methods
 async function run() {
   try {
-    const filePath = core.getInput("path");
-    const platform = core.getInput("platform");
+    //const filePath = core.getInput("path");
+    const filePath = "/Users/anuragsinha/Documents/tools/mono-ios/hotstarx-ios-mobile/hotstarx-ios-mobile/Application/Info.plist"
+    const platform = "ios"
 
     if (!filePath && !platform) return;
 
@@ -78,7 +101,32 @@ async function run() {
       );
 
       fs.writeFileSync(filePath, newContent);
-    } else {
+    } else if (platform === "ios") {
+      const buildVersion = `xcrun agvtool what-version`
+      console.log(buildVersion)
+        await execCommand(buildVersion).catch(error => {
+            core.setFailed(error.message)
+        })
+        
+      const newVersion = Number(buildVersion) + 1;
+      const marketingVersion = `agvtool what-marketing-version -terse1`
+      console.log(marketingVersion)
+        await execCommand(marketingVersion).catch(error => {
+            core.setFailed(error.message)
+        })
+      const fullVersion = isCalver(marketingVersion);
+      console.log(fullVersion)
+      const updatedVersion = `agvtool next-version -all`
+      await execCommand(updatedVersion).catch(error => {
+        core.setFailed(error.message)
+    })
+      console.log(updatedVersion)
+      const newMarketingVersion = `xcrun agvtool new-marketing-version ${fullVersion}` 
+      await execCommand(newMarketingVersion).catch(error => {
+        core.setFailed(error.message)
+      })
+    }
+    else {
       core.setFailed("Only `android` and `web` supported right now.");
     }
   } catch (error) {
@@ -1643,6 +1691,22 @@ if (process.env.NODE_DEBUG && /\btunnel\b/.test(process.env.NODE_DEBUG)) {
   debug = function() {};
 }
 exports.debug = debug; // for test
+
+
+/***/ }),
+
+/***/ 526:
+/***/ ((module) => {
+
+module.exports = eval("require")("@actions/exec");
+
+
+/***/ }),
+
+/***/ 663:
+/***/ ((module) => {
+
+module.exports = eval("require")("plist");
 
 
 /***/ }),
