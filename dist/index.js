@@ -85,27 +85,20 @@ async function run() {
 
       fs.writeFileSync(filePath, newContent);
     } else if (platform === "ios") {
-      await execCommand("xcrun agvtool what-version").catch((error) => {
-        core.setFailed(error.message);
-      });
-      const currentVersion = await execCommand(
-        "agvtool what-marketing-version -terse1"
-      ).catch((error) => {
-        core.setFailed(error.message);
-      });
+      const currentVersion = await execCommand("agvtool what-marketing-version -terse1")
+        .catch((error) => {
+          core.setFailed(error.message);
+        });
       const fullVersion = isCalver(currentVersion);
-      const [major, minor, patch] = fullVersion.split(".");
-      var combinedVersion = major + "." + minor + "." + patch;
-      const updatedVersion = `agvtool next-version -all`;
-      await execCommand(updatedVersion).catch((error) => {
+      await execCommand('agvtool next-version -all').catch((error) => {
         core.setFailed(error.message);
       });
-      const newMarketingVersion = `xcrun agvtool new-marketing-version ${combinedVersion}`;
+      const newMarketingVersion = `xcrun agvtool new-marketing-version ${fullVersion}`;
       await execCommand(newMarketingVersion).catch((error) => {
         core.setFailed(error.message);
       });
     } else {
-      core.setFailed("Only `android` and `web` supported right now.");
+      core.setFailed("Only `android`, `web` and `ios` supported right now.");
     }
   } catch (error) {
     core.setFailed(error.message);
