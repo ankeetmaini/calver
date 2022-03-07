@@ -44,8 +44,8 @@ const isCalver = (version) => {
 // most @actions toolkit packages have async methods
 async function run() {
   try {
-      const filePath = core.getInput("path");
-      const platform = core.getInput("platform");
+    const filePath = core.getInput("path");
+    const platform = core.getInput("platform");
     
 
 
