@@ -82,9 +82,6 @@ async function run() {
 
       fs.writeFileSync(filePath, newContent);
     } else if (platform === "ios") {
-        await execCommand('xcrun agvtool what-version').catch(error => {
-            core.setFailed(error.message)
-        })
       const currentVersion =  await execCommand('agvtool what-marketing-version -terse1').catch(error => {
             core.setFailed(error.message)
         })
