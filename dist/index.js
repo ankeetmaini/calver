@@ -50,8 +50,10 @@ const isCalver = (version) => {
 // most @actions toolkit packages have async methods
 async function run() {
   try {
-     const filePath = core.getInput("path");
-    const platform = core.getInput("platform");
+      const filePath = core.getInput("path");
+      const platform = core.getInput("platform");
+    
+
 
     if (!filePath && !platform) return;
 
@@ -93,9 +95,9 @@ async function run() {
             core.setFailed(error.message)
         })
       const fullVersion = isCalver(currentVersion);
-      const [major,minor,patch]  = fullVersion.split('.');
+      const [major,minor,patch,buildVersion]  = fullVersion.split('.');
       var combinedVersion = major + '.' + minor + '.' + patch;
-      const updatedVersion = `agvtool next-version -all`
+      const updatedVersion = `agvtool new-version -all ${buildVersion}`
       await execCommand(updatedVersion).catch(error => {
         core.setFailed(error.message)
     })
