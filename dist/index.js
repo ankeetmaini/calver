@@ -20,9 +20,10 @@ const pad = (n) => {
 };
 
 async function execCommand(command, options = {}) {
-  const projectPath = core.getInput("project-path");
-  options.cwd = projectPath;
-  return exec.exec(command, [], options);
+
+  const projectPath = core.getInput('project-path')
+  options.cwd = projectPath
+  return exec.exec(command, [], options)
 }
 
 const isCalver = (version) => {
@@ -51,6 +52,8 @@ async function run() {
   try {
     const filePath = core.getInput("path");
     const platform = core.getInput("platform");
+    
+
 
     if (!filePath && !platform) return;
 
@@ -85,26 +88,22 @@ async function run() {
 
       fs.writeFileSync(filePath, newContent);
     } else if (platform === "ios") {
-      await execCommand("xcrun agvtool what-version").catch((error) => {
-        core.setFailed(error.message);
-      });
-      const currentVersion = await execCommand(
-        "agvtool what-marketing-version -terse1"
-      ).catch((error) => {
-        core.setFailed(error.message);
-      });
+      const currentVersion =  await execCommand('agvtool what-marketing-version -terse1').catch(error => {
+            core.setFailed(error.message)
+        })
       const fullVersion = isCalver(currentVersion);
-      const [major, minor, patch] = fullVersion.split(".");
-      var combinedVersion = major + "." + minor + "." + patch;
-      const updatedVersion = `agvtool next-version -all`;
-      await execCommand(updatedVersion).catch((error) => {
-        core.setFailed(error.message);
-      });
-      const newMarketingVersion = `xcrun agvtool new-marketing-version ${combinedVersion}`;
-      await execCommand(newMarketingVersion).catch((error) => {
-        core.setFailed(error.message);
-      });
-    } else {
+      const [major,minor,patch,buildVersion]  = fullVersion.split('.');
+      var combinedVersion = major + '.' + minor + '.' + patch;
+      const updatedVersion = `agvtool new-version -all ${buildVersion}`
+      await execCommand(updatedVersion).catch(error => {
+        core.setFailed(error.message)
+    })
+      const newMarketingVersion = `xcrun agvtool new-marketing-version ${combinedVersion}`
+      await execCommand(newMarketingVersion).catch(error => {
+        core.setFailed(error.message)
+      })
+    }
+    else {
       core.setFailed("Only `android` and `web` supported right now.");
     }
   } catch (error) {
