@@ -20,11 +20,11 @@ const pad = (n) => {
 };
 
 async function execCommand(command, options = {}) {
+
   const projectPath = core.getInput('project-path')
   options.cwd = projectPath
   return exec.exec(command, [], options)
 }
-
 
 const isCalver = (version) => {
   const date = new Date();
