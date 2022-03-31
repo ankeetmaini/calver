@@ -51,8 +51,7 @@ const isCalver = (version) => {
 async function run() {
   try {
     const filePath = core.getInput("path");
-    const platform = core.getInput("platform");
-    
+    const platform = core.getInput("platform");    
 
 
     if (!filePath && !platform) return;
@@ -94,7 +93,7 @@ async function run() {
       const fullVersion = isCalver(currentVersion);
       const [major,minor,patch,buildVersion]  = fullVersion.split('.');
       var combinedVersion = major + '.' + minor + '.' + patch;
-      const updatedVersion = `agvtool new-version -all ${buildVersion}`
+      const updatedVersion = `xcrun agvtool next-version -all`
       await execCommand(updatedVersion).catch(error => {
         core.setFailed(error.message)
     })
