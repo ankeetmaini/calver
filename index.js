@@ -15,8 +15,7 @@ const pad = (n) => {
 
 async function execCommand(command, options = {}) {
 
-  //const projectPath = core.getInput('project-path')
-  const projectPath = "/Users/anuragsinha/Documents/mono-ios/hotstarx-ios-mobile"
+  const projectPath = core.getInput('project-path')
   options.cwd = projectPath
   return exec.exec(command, [], options)
 }
@@ -45,11 +44,8 @@ const isCalver = (version) => {
 // most @actions toolkit packages have async methods
 async function run() {
   try {
-    //const filePath = core.getInput("path");
-    //const platform = core.getInput("platform");
-    const filePath = "/Users/anuragsinha/Documents/mono-ios/hotstarx-ios-mobile/hotstarx-ios-mobile/Application/Info.plist"
-    const platform = "ios"
-    
+    const filePath = core.getInput("path");
+    const platform = core.getInput("platform");    
 
 
     if (!filePath && !platform) return;
@@ -91,7 +87,6 @@ async function run() {
       const fullVersion = isCalver(currentVersion);
       const [major,minor,patch,buildVersion]  = fullVersion.split('.');
       var combinedVersion = major + '.' + minor + '.' + patch;
-      //const updatedVersion = `agvtool new-version -all ${buildVersion}`
       const updatedVersion = `xcrun agvtool next-version -all`
       await execCommand(updatedVersion).catch(error => {
         core.setFailed(error.message)
