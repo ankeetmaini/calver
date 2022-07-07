@@ -75,6 +75,8 @@ async function run() {
           (main, old) => main.replace(old, fullVersion)
         );
         fs.writeFileSync(filePath, versionNameUpdated);
+      } else {
+        fs.writeFileSync(filePath, versionUpdated);
       }
     } else if (platform === "web") {
       const packageJson = JSON.parse(fileContents);
