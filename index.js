@@ -1,6 +1,7 @@
 const core = require("@actions/core");
 const fs = require("fs");
 const exec = require("@actions/exec");
+const github = require('@actions/github')
 
 const versionCodeRegex = new RegExp(/versionCode\s*=\s*(\d*)/);
 const versionNameRegex = new RegExp(/versionName\s*=\s*"([0-9|.|a-z]*)"/);
@@ -47,6 +48,7 @@ async function run() {
     const filePath = core.getInput("path");
     const platform = core.getInput("platform");    
 
+    const branchName = github.context.ref
 
     if (!filePath && !platform) return;
 
@@ -65,12 +67,14 @@ async function run() {
         versionCodeRegex,
         (main, old) => main.replace(old, newVersion)
       );
-
-      const versionNameUpdated = versionUpdated.replace(
-        versionNameRegex,
-        (main, old) => main.replace(old, fullVersion)
-      );
-      fs.writeFileSync(filePath, versionNameUpdated);
+      console.log(branchName)
+      if(!branchName.startWith("refs/heads/release-")) {
+        const versionNameUpdated = versionUpdated.replace(
+          versionNameRegex,
+          (main, old) => main.replace(old, fullVersion)
+        );
+        fs.writeFileSync(filePath, versionNameUpdated);
+      }
     } else if (platform === "web") {
       const packageJson = JSON.parse(fileContents);
       const fullVersion = isCalver(packageJson.version);
@@ -81,20 +85,22 @@ async function run() {
 
       fs.writeFileSync(filePath, newContent);
     } else if (platform === "ios") {
-      const currentVersion =  await execCommand('agvtool what-marketing-version -terse1').catch(error => {
-            core.setFailed(error.message)
-        })
-      const fullVersion = isCalver(currentVersion);
-      const [major,minor,patch,buildVersion]  = fullVersion.split('.');
-      var combinedVersion = major + '.' + minor + '.' + patch;
-      const updatedVersion = `xcrun agvtool next-version -all`
-      await execCommand(updatedVersion).catch(error => {
-        core.setFailed(error.message)
-    })
-      const newMarketingVersion = `xcrun agvtool new-marketing-version ${combinedVersion}`
-      await execCommand(newMarketingVersion).catch(error => {
-        core.setFailed(error.message)
+        const currentVersion =  await execCommand('agvtool what-marketing-version -terse1').catch(error => {
+              core.setFailed(error.message)
+          })
+        const fullVersion = isCalver(currentVersion);
+        const [major,minor,patch,buildVersion]  = fullVersion.split('.');
+        var combinedVersion = major + '.' + minor + '.' + patch;
+        const updatedVersion = `xcrun agvtool next-version -all`
+        await execCommand(updatedVersion).catch(error => {
+          core.setFailed(error.message)
       })
+      if(!branchName.startWith("refs/heads/release-")) {
+        const newMarketingVersion = `xcrun agvtool new-marketing-version ${combinedVersion}`
+        await execCommand(newMarketingVersion).catch(error => {
+          core.setFailed(error.message)
+        })
+      }
     }
     else {
       core.setFailed("Only `android` and `web` supported right now.");
