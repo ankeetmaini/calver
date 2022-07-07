@@ -74,7 +74,7 @@ async function run() {
         (main, old) => main.replace(old, newVersion)
       );
       console.log(branchName)
-      if(!branchName.startWith("refs/heads/release-")) {
+      if(!branchName.startsWith("refs/heads/release-")) {
         const versionNameUpdated = versionUpdated.replace(
           versionNameRegex,
           (main, old) => main.replace(old, fullVersion)
@@ -101,7 +101,7 @@ async function run() {
         await execCommand(updatedVersion).catch(error => {
           core.setFailed(error.message)
       })
-      if(!branchName.startWith("refs/heads/release-")) {
+      if(!branchName.startsWith("refs/heads/release-")) {
         const newMarketingVersion = `xcrun agvtool new-marketing-version ${combinedVersion}`
         await execCommand(newMarketingVersion).catch(error => {
           core.setFailed(error.message)
