@@ -75,6 +75,7 @@ async function run() {
       );
       console.log(branchName)
       if(!branchName.startsWith("refs/heads/release-")) {
+        console.log('updated version string')
         const versionNameUpdated = versionUpdated.replace(
           versionNameRegex,
           (main, old) => main.replace(old, fullVersion)
